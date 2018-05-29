@@ -4,7 +4,7 @@ Auto fire single shot weapons in PUBG Mobile PC version with recoil compensation
   The primary goal and functionality of the program is quite simple but here are the major highlights :
 
 <ul>
-  <li>``Hold middle mouse button to auto fire single shot weapons``</li>
+  <li>`Hold middle mouse button to auto fire single shot weapons`</li>
   <li>Allows modulation of four different parameters : <ol><li>Horizontal recoil correction (dx)</li> <li>Vertical recoil correction (dy)</li> <li>Sleep period between consecutive mouse moves during recoil correction* (WaitMs)</li> <li>Delay period between consecutive shots (DelayMs)</li></ol></li>
 <li>Ability to save custom presets for different weapons along with six built-ins</li>
 <li>Enter key switches between different presets when in monitoring mode for when within the game</li>
