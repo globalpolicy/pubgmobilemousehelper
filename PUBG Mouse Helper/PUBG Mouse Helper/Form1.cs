@@ -266,12 +266,14 @@ namespace PUBG_Mouse_Helper
         private void trayToolStripMenuItem_Click(object sender, EventArgs e)
         {
             notifyIcon1.Visible = true;
+            this.WindowState = FormWindowState.Minimized;
             this.Hide();
         }
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
             this.Show();
+            this.WindowState = FormWindowState.Normal;
             notifyIcon1.Visible = false;
         }
 
