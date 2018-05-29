@@ -13,8 +13,13 @@ Auto fire single shot weapons in PUBG Mobile PC version with recoil compensation
   
 >\*Recoil correction has been implemented by basically holding and dragging the in-game cursor since the game crosshair doesn't correspond to the actual cursor position. And while the in-game cursor does correspond to the actual cursor position, it is constantly repositioned to somewhere near the center of the game window. So, a simple SetCursorPos() call doesn't do the trick (tried and failed). This is the reason mouse_event() calls have been used to simulate mouse movement in terms of x and y displacements - dx and dy - for recoil correction. Furthermore, looping through the intermediate dx and dy pixels without any artificially placed delays seems to be too quick for the game to register - the recoil correction stops working altogether. This is why a WaitMs delay is required.
 
-
-The original C code that I experimented with is available <a href="https://gist.github.com/globalpolicy/5c9f3bc071412e646524c1e552416b5d">here</a><br/>
+<hr/>
+<p>
+  <img src="https://4.bp.blogspot.com/-9IdUipYwF4s/Ww1rV1D16gI/AAAAAAAABRA/EVoczKscgjQRTLh6foLTbPX4lNHSnrORACLcBGAs/s1600/1.png">
+  </p>
+  <hr/>
+The original C code that I experimented with is available 
+<a href="https://gist.github.com/globalpolicy/5c9f3bc071412e646524c1e552416b5d">here</a><br/>
 My <a href="http://c0dew0rth.blogspot.com/2018/05/pubg-mobile-mouse-helper.html">blog post</a> for the program.
 <br/>
 
