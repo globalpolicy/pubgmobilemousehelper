@@ -11,12 +11,12 @@ namespace PUBG_Mouse_Helper
 {
     public class Poller
     {
+        public bool PerformRecoilCompensation { get; set; } = true;
+
         private IOnHotkeyPressed onHotkeyPressed;
         
         [DllImport("user32.dll")]
         static extern short GetAsyncKeyState(System.Windows.Forms.Keys vKey);
-
-        bool firstPress = true;
 
         public Poller(IOnHotkeyPressed onHotkeyPressed)
         {
@@ -26,8 +26,12 @@ namespace PUBG_Mouse_Helper
         public void Poll(int dx, int dy, uint sleep)
         {
             PollMButton(dx, dy, sleep);
-            PollPresetChangeHotkey();
-            PollTrackbarValuesChangeHotkey();
+            if (this.PerformRecoilCompensation)
+            {
+                PollPresetChangeHotkey();
+                PollTrackbarValuesChangeHotkey();
+            }
+            PollToggleRecoilCompensationHotkey();
         }
 
         private void PollMButton(int dx, int dy, uint sleep)
@@ -35,25 +39,16 @@ namespace PUBG_Mouse_Helper
             short gaks = GetAsyncKeyState(System.Windows.Forms.Keys.MButton);
             if ((gaks & 0b10000000_00000000) > 0) //if MSB is set (non-zero) i.e. middle button is being held down
             {
-                if (firstPress)
+                MouseHelperClass.LeftClickDown();
+                MouseHelperClass.LeftClickUp();
+
+                if (this.PerformRecoilCompensation)
                 {
-                    MouseHelperClass.TypeGraveAccent();
-                    MouseHelperClass.MouseMove(getDesktopCenterPosition().Item1 - Cursor.Position.X, getDesktopCenterPosition().Item2 - Cursor.Position.Y, 0);
-                    MouseHelperClass.TypeGraveAccent();
+                    MouseHelperClass.MouseMove(dx, dy, sleep);
                 }
-                MouseHelperClass.LeftClickDown();
-                MouseHelperClass.LeftClickUp();
-                MouseHelperClass.TypeGraveAccent();
-                MouseHelperClass.LeftClickDown();
-                MouseHelperClass.MouseMove(dx, dy, sleep);
-                MouseHelperClass.LeftClickUp();
-                MouseHelperClass.TypeGraveAccent();
-                firstPress = false;
+
             }
-            else
-            {
-                firstPress = true;
-            }
+            
         }
 
         private void PollPresetChangeHotkey()
@@ -97,9 +92,15 @@ namespace PUBG_Mouse_Helper
             }
         }
 
-        public Tuple<int, int> getDesktopCenterPosition()
+        private void PollToggleRecoilCompensationHotkey()
         {
-            return new Tuple<int, int>(Screen.PrimaryScreen.Bounds.Height / 2, Screen.PrimaryScreen.Bounds.Width / 2);
+            short gaks = GetAsyncKeyState(Keys.F7);
+            if ((gaks & 0b10000000_00000000) > 0)//if F7 arrow key was pressed and held
+            {
+                HelperFunctions.WaitUntilTimeoutWhileTrue(() => (GetAsyncKeyState(Keys.F7) & 0b10000000_00000000) > 0, 100); //wait until F7 arrow key is released without timeout of 100ms
+                this.onHotkeyPressed.OnToggleRecoilCompensationHotkeyPressed();
+            }
         }
+
     }
 }

@@ -45,10 +45,11 @@
             this.labelMessage.Size = new System.Drawing.Size(235, 46);
             this.labelMessage.TabIndex = 0;
             this.labelMessage.Text = "Some message here";
+            this.labelMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // timerCloseForm
             // 
-            this.timerCloseForm.Interval = 50;
+            this.timerCloseForm.Interval = 10;
             this.timerCloseForm.Tick += new System.EventHandler(this.timerCloseForm_Tick);
             // 
             // MessageToast
