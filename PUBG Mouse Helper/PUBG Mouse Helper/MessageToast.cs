@@ -20,9 +20,14 @@ namespace PUBG_Mouse_Helper
             this.Location = new Point(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width / 2 - this.Width / 2, 50);
         }
 
+        public MessageToast(string message, int timerIntervalMs = 10) : this(message)
+        {
+            this.timerCloseForm.Interval = timerIntervalMs;
+        }
+
         private void timerCloseForm_Tick(object sender, EventArgs e)
         {
-            double newOpacity = this.Opacity - 10.0 / 100;
+            double newOpacity = this.Opacity - 2.0 / 100;
             if (newOpacity <= 0)
             {
                 this.Close();

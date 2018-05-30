@@ -26,7 +26,6 @@ namespace PUBG_Mouse_Helper
                 DelayMs = delayMs;
             }
             public Preset() { }
-            //public Preset(bool IsUserDefined) => UserDefined = IsUserDefined;
             public string PresetName { get; set; }
             public bool UserDefined { get; set; }
             public int Dx { get; set; }
@@ -61,6 +60,7 @@ namespace PUBG_Mouse_Helper
             trackBar2.Scroll += OnTrackBarScroll;
             trackBar3.Scroll += OnTrackBarScroll;
             trackBar4.Scroll += OnTrackBarScroll;
+            poller = new Poller(this);
         }
 
         #region Interface methods
@@ -148,6 +148,14 @@ namespace PUBG_Mouse_Helper
             this.CurrentPreset = new Preset();
             new MessageToast($"dy = {trackBar2.Value}").Show(); //show a message to user regarding the new dy value
         }
+
+        public void OnToggleRecoilCompensationHotkeyPressed()
+        {
+            toolStripMenuItemEnableAntiRecoil.PerformClick();
+            string enabledOrDisabled = toolStripMenuItemEnableAntiRecoil.Checked ? "enable" : "disable";
+            string enabledOrDisabledANTI = !toolStripMenuItemEnableAntiRecoil.Checked ? "enable" : "disable";
+            new MessageToast($"Recoil compensation {enabledOrDisabled}d.\nPress F7 to {enabledOrDisabledANTI}.", 50).Show();
+        }
         #endregion
 
 
@@ -195,7 +203,6 @@ namespace PUBG_Mouse_Helper
             toolStripMenuItemSaveAsPreset.Enabled = false;
             toolStripMenuItemDeletePreset.Enabled = false;
             toolStripMenuItemActivate.Enabled = false;
-            poller = new Poller(this);
             timer1.Start();
         }
 
@@ -224,42 +231,42 @@ namespace PUBG_Mouse_Helper
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 29, 4, 8);
+            this.CurrentPreset = new Preset(false, presetName, 0, 6, 4, 8);
             this.presetSwitchHotkeyIndex = 0;
         }
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
             string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 35, 2, 6);
+            this.CurrentPreset = new Preset(false, presetName, 0, 8, 2, 6);
             this.presetSwitchHotkeyIndex = 1;
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
             string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 35, 2, 6);
+            this.CurrentPreset = new Preset(false, presetName, 0, 6, 2, 6);
             this.presetSwitchHotkeyIndex = 2;
         }
 
         private void toolStripMenuItem5_Click(object sender, EventArgs e)
         {
             string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 5, 40, 2, 6);
+            this.CurrentPreset = new Preset(false, presetName, 1, 10, 2, 6);
             this.presetSwitchHotkeyIndex = 3;
         }
 
         private void toolStripMenuItem6_Click(object sender, EventArgs e)
         {
             string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 5, 35, 2, 6);
+            this.CurrentPreset = new Preset(false, presetName, 0, 9, 2, 6);
             this.presetSwitchHotkeyIndex = 4;
         }
 
         private void toolStripMenuItem7_Click(object sender, EventArgs e)
         {
             string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 35, 2, 6);
+            this.CurrentPreset = new Preset(false, presetName, 1, 8, 2, 6);
             this.presetSwitchHotkeyIndex = 5;
         }
 
@@ -395,9 +402,30 @@ Here are a couple pro-tips anyway :
 
 1. Try running as administrator if the program doesn't seem to work.
 2. You can change the active preset while monitoring is on by pressing Enter key.
-3. Also, you can use the arrow keys to change the recoil correction parameters.";
+3. You can use the arrow keys to change the recoil correction parameters.
+4. Use F7 key to toggle recoil compensation on and off.";
 
             MessageBox.Show(instructionMsg, "Instructions", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (timer1.Enabled == true)
+            {
+                //eat up shortcut keys when timer is running i.e. monitoring is active lest there be a conflict
+                switch (keyData)
+                {
+                    case Keys.F7:
+                        return false;
+                        break;
+                }
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void toolStripMenuItemEnableAntiRecoil_Click(object sender, EventArgs e)
+        {
+            this.poller.PerformRecoilCompensation = toolStripMenuItemEnableAntiRecoil.Checked;
         }
 
 

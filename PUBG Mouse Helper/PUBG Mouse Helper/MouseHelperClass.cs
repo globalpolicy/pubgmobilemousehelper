@@ -20,10 +20,7 @@ namespace PUBG_Mouse_Helper
         const uint MOUSEEVENTF_MIDDLEDOWN = 0x20;
         const uint MOUSEEVENTF_MIDDLEUP = 0x40;
         const uint MOUSEEVENTF_MOVE = 0x01;
-        [DllImport("user32.dll")]
-        static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
-        const uint KEYEVENTF_KEYUP = 0x0002;
-        const byte VK_OEM_3 = 0xc0;
+        
 
         public static void LeftClickDown()
         {
@@ -33,12 +30,6 @@ namespace PUBG_Mouse_Helper
         public static void LeftClickUp()
         {
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
-        }
-
-        public static void TypeGraveAccent()
-        {
-            keybd_event(VK_OEM_3, 0, 0, UIntPtr.Zero);
-            keybd_event(VK_OEM_3, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
         }
 
         public static void MouseMove(int dx, int dy, uint sleep = 10)
