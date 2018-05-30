@@ -9,11 +9,12 @@ Auto fire single shot weapons in PUBG Mobile PC version with recoil compensation
 <li>Ability to save custom presets for different weapons along with six built-ins</li>
 <li>Enter key switches between different presets when in monitoring mode for when within the game</li>
   <li>Arrow keys modify the dx and dy parameters when in monitoring mode for when within the game</li>
+  <li>F7 key to toggle recoil correction on and off</li>
   </ul>
 
   </p>
   
->\*Recoil correction has been implemented by basically holding and dragging the in-game cursor since the game crosshair doesn't correspond to the actual cursor position. And while the in-game cursor does correspond to the actual cursor position, it is constantly repositioned to somewhere near the center of the game window. So, a simple SetCursorPos() call doesn't do the trick (tried and failed). This is the reason mouse_event() calls have been used to simulate mouse movement in terms of x and y displacements - dx and dy - for recoil correction. Furthermore, looping through the intermediate dx and dy pixels without any artificially placed delays seems to be too quick for the game to register - the recoil correction stops working altogether. This is why a WaitMs delay is required.
+>\*mouse_event() calls have been used to simulate mouse movement in terms of x and y displacements - dx and dy - for recoil correction. Furthermore, looping through the intermediate dx and dy pixels without any artificially placed delays seems to be too quick for the game to register - the recoil correction stops working altogether. This is why a WaitMs delay is required.
 
 <hr/>
 <p>
