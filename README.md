@@ -18,7 +18,7 @@ Auto fire single shot weapons in PUBG Mobile PC version with recoil compensation
 
 <hr/>
 <p>
-  <img src="https://4.bp.blogspot.com/-9IdUipYwF4s/Ww1rV1D16gI/AAAAAAAABRA/EVoczKscgjQRTLh6foLTbPX4lNHSnrORACLcBGAs/s1600/1.png">
+  <img src="https://github.com/globalpolicy/pubgmobilemousehelper/blob/master/screenshot.png">
   </p>
   <hr/>
 The original C code that I experimented with is available 
