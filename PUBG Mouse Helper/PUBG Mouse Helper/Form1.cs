@@ -74,7 +74,7 @@ namespace PUBG_Mouse_Helper
 
         private void ActivateDeactivateHotkey(KeyboardHook.VKeys key)
         {
-            if (key == KeyboardHook.VKeys.F8)
+            if (key == KeyboardHook.VKeys.CAPITAL)
             {
                 if (isAppActivated)
                     DeActivateApp();
@@ -425,7 +425,7 @@ Here are a couple pro-tips anyway :
 2. You can change the active preset while monitoring is on by pressing Enter key.
 3. You can use the arrow keys to change the recoil correction parameters.
 4. Use F7 key to toggle recoil compensation on and off.
-5. Use F8 key to activate/deactivate the app.";
+5. Use CAPSLOCK key to activate/deactivate the app.";
 
             MessageBox.Show(instructionMsg, "Instructions", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
