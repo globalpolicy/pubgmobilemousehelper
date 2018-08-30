@@ -65,12 +65,17 @@ namespace PUBG_Mouse_Helper
                         if (foundPreset)
                         {
                             string[] tokens = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                            if (tokens.Length == 4)
+                            if (tokens.Length == 5)
                             {
                                 retval.Add(Int32.Parse(tokens[0]));
                                 retval.Add(Int32.Parse(tokens[1]));
                                 retval.Add(Int32.Parse(tokens[2]));
                                 retval.Add(Int32.Parse(tokens[3]));
+
+                                if (tokens.Length > 4)
+                                    KeyboardHelperClass.inactiveShootKey = Convert.ToString(tokens[4]).ElementAt(0).ToString();
+                                else
+                                    KeyboardHelperClass.inactiveShootKey = "]";
                             }
                             else
                             {
@@ -90,7 +95,7 @@ namespace PUBG_Mouse_Helper
             return retval;
         }
 
-        public static bool SavePresets(string presetName, int dx, int dy, int waitms, int delayms)
+        public static bool SavePresets(string presetName, int dx, int dy, int waitms, int delayms, char shootKey)
         {
             bool retval = false;
 
@@ -100,7 +105,7 @@ namespace PUBG_Mouse_Helper
                 oldContent = File.ReadAllText(saveFileName);
                 File.Delete(saveFileName);
             }
-            string newContent = oldContent + presetName + "\r\n" + dx.ToString() + ";" + dy.ToString() + ";" + waitms.ToString() + ";" + delayms.ToString() + "\r\n";
+            string newContent = oldContent + presetName + "\r\n" + dx.ToString() + ";" + dy.ToString() + ";" + waitms.ToString() + ";" + delayms.ToString() + ";" + shootKey.ToString() + "\r\n";
             File.WriteAllText(saveFileName, newContent);
             retval = true;
 

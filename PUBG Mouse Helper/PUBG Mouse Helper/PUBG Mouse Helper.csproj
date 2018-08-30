@@ -72,6 +72,8 @@
     <Compile Include="HelperFunctions.cs" />
     <Compile Include="IOkButtonPressedPresetDialog.cs" />
     <Compile Include="IOnHotkeyPressed.cs" />
+    <Compile Include="KeyboardHelperClass.cs" />
+    <Compile Include="KeyboardHook.cs" />
     <Compile Include="MessageToast.cs">
       <SubType>Form</SubType>
     </Compile>

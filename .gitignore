@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/PUBG Mouse Helper/.vs/PUBG Mouse Helper/v15
+/PUBG Mouse Helper/PUBG Mouse Helper/bin/Debug

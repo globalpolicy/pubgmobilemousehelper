@@ -18,7 +18,7 @@ namespace PUBG_Mouse_Helper
 
         public static string GetApplicationName()
         {
-            return "PUBG Mouse Helper 2.1";
+            return "PUBG Mouse Helper 2.1.1";
         }
     }
 }
