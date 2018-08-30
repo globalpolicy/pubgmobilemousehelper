@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace PUBG_Mouse_Helper
 {
@@ -16,7 +10,7 @@ namespace PUBG_Mouse_Helper
         private IOnHotkeyPressed onHotkeyPressed;
         
         [DllImport("user32.dll")]
-        static extern short GetAsyncKeyState(System.Windows.Forms.Keys vKey);
+        static extern short GetAsyncKeyState(Keys vKey);
 
         public Poller(IOnHotkeyPressed onHotkeyPressed)
         {
@@ -26,7 +20,7 @@ namespace PUBG_Mouse_Helper
         public void Poll(int dx, int dy, uint sleep)
         {
             PollMButton(dx, dy, sleep);
-            if (this.PerformRecoilCompensation)
+            if (PerformRecoilCompensation)
             {
                 PollPresetChangeHotkey();
                 PollTrackbarValuesChangeHotkey();
@@ -36,17 +30,18 @@ namespace PUBG_Mouse_Helper
 
         private void PollMButton(int dx, int dy, uint sleep)
         {
-            short gaks = GetAsyncKeyState(System.Windows.Forms.Keys.MButton);
+            short gaks = GetAsyncKeyState(Keys.LButton);
             if ((gaks & 0b10000000_00000000) > 0) //if MSB is set (non-zero) i.e. middle button is being held down
             {
-                MouseHelperClass.LeftClickDown();
-                MouseHelperClass.LeftClickUp();
+                //MouseHelperClass.LeftClickDown();
+                //MouseHelperClass.LeftClickUp();
+                
+                KeyboardHelperClass.PressKeyboardShootKey();
 
                 if (this.PerformRecoilCompensation)
                 {
                     MouseHelperClass.MouseMove(dx, dy, sleep);
                 }
-
             }
             
         }
