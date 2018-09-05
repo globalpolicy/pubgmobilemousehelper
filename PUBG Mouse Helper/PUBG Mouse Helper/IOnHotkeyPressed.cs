@@ -14,5 +14,6 @@ namespace PUBG_Mouse_Helper
         void OnUpArrowPressed();
         void OnDownArrowPressed();
         void OnToggleRecoilCompensationHotkeyPressed();
+        void OnToggleActivateProgramHotkeyPressed();
     }
 }
