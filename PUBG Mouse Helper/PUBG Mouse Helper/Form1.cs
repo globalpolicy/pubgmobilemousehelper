@@ -156,6 +156,15 @@ namespace PUBG_Mouse_Helper
             string enabledOrDisabledANTI = !toolStripMenuItemEnableAntiRecoil.Checked ? "enable" : "disable";
             new MessageToast($"Recoil compensation {enabledOrDisabled}d.\nPress F7 to {enabledOrDisabledANTI}.", 50).Show();
         }
+
+        public void OnToggleActivateProgramHotkeyPressed()
+        {
+            toolStripMenuItemActivate.PerformClick();
+            string enabledOrDisabled = toolStripMenuItemActivate.Checked ? "activate" : "deactivate";
+            string enabledOrDisabledANTI = !toolStripMenuItemActivate.Checked ? "activate" : "deactivate";
+            new MessageToast($"Program {enabledOrDisabled}d.\nPress F6 to {enabledOrDisabledANTI}.", 50).Show();
+        }
+
         #endregion
 
 
@@ -197,36 +206,24 @@ namespace PUBG_Mouse_Helper
             this.CurrentPreset = new Preset();
         }
 
-        private void toolStripMenuItem9_Click(object sender, EventArgs e)
-        {
-            toolStripMenuItemStop.Enabled = true;
-            toolStripMenuItemSaveAsPreset.Enabled = false;
-            toolStripMenuItemDeletePreset.Enabled = false;
-            toolStripMenuItemActivate.Enabled = false;
-            timer1.Start();
-        }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (toolStripMenuItemActivate.Checked)
+            {
+                toolStripStatusLabel1.Text = $"Monitor active : (dx={trackBar1.Value}, dy={trackBar2.Value}, WaitMs={trackBar3.Value}, DelayMs={trackBar4.Value})";
+                notifyIcon1.Text = toolStripStatusLabel1.Text;
+            }
+            else
+            {
+                toolStripStatusLabel1.Text = "Ready";
+                notifyIcon1.Text = HelperFunctions.GetApplicationName();
+            }
             timer1.Interval = trackBar4.Value;
-            poller.Poll(trackBar1.Value, trackBar2.Value, (uint)trackBar3.Value);
-            toolStripStatusLabel1.Text = $"Monitor active : (dx={trackBar1.Value}, dy={trackBar2.Value}, WaitMs={trackBar3.Value}, DelayMs={trackBar4.Value})";
-            notifyIcon1.Text = toolStripStatusLabel1.Text;
+            poller.Poll(trackBar1.Value, trackBar2.Value, (uint)trackBar3.Value, toolStripComboBoxFireButton.Text);
+
         }
 
-        private void toolStripMenuItem10_Click(object sender, EventArgs e)
-        {
-            timer1.Stop();
-            toolStripStatusLabel1.Text = "Ready";
-            notifyIcon1.Text = HelperFunctions.GetApplicationName();
-            toolStripMenuItemSaveAsPreset.Enabled = true;
-            if (!CurrentPreset.IsEmpty() && CurrentPreset.UserDefined)
-            {
-                toolStripMenuItemDeletePreset.Enabled = true;
-            }
-            toolStripMenuItemActivate.Enabled = true;
-            toolStripMenuItemStop.Enabled = false;
-        }
+
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
@@ -403,23 +400,27 @@ Here are a couple pro-tips anyway :
 1. Try running as administrator if the program doesn't seem to work.
 2. You can change the active preset while monitoring is on by pressing Enter key.
 3. You can use the arrow keys to change the recoil correction parameters.
-4. Use F7 key to toggle recoil compensation on and off.";
+4. Use F7 key to toggle recoil compensation on and off.
+5. Use F6 key to enable/disable the program.
+";
 
             MessageBox.Show(instructionMsg, "Instructions", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (timer1.Enabled == true)
+            if (toolStripMenuItemActivate.Checked)
             {
-                //eat up shortcut keys when timer is running i.e. monitoring is active lest there be a conflict
-                switch (keyData)
-                {
-                    case Keys.F7:
-                        return false;
-                        break;
-                }
+                //eat up shortcut key F7 for 'Anti-Recoil' when program is activated, lest there be a conflict
+                if (keyData == Keys.F7)
+                    return false;
+
             }
+
+            //swallow the shortcut key F6 for 'Activate' menu, lest there be a conflict
+            if (keyData == Keys.F6)
+                return false;
+
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
@@ -428,6 +429,26 @@ Here are a couple pro-tips anyway :
             this.poller.PerformRecoilCompensation = toolStripMenuItemEnableAntiRecoil.Checked;
         }
 
+        private void toolStripMenuItemActivate_Click(object sender, EventArgs e)
+        {
+            if (toolStripMenuItemActivate.Checked)
+            {
+                this.poller.Activated = true;
+                toolStripMenuItemSaveAsPreset.Enabled = false;
+                toolStripMenuItemDeletePreset.Enabled = false;
+            }
+            else
+            {
+                this.poller.Activated = false;
+                toolStripStatusLabel1.Text = "Ready";
+                notifyIcon1.Text = HelperFunctions.GetApplicationName();
+                toolStripMenuItemSaveAsPreset.Enabled = true;
+                if (!CurrentPreset.IsEmpty() && CurrentPreset.UserDefined)
+                {
+                    toolStripMenuItemDeletePreset.Enabled = true;
+                }
+            }
+        }
 
     }
 
