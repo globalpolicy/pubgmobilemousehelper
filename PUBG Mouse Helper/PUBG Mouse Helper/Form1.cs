@@ -228,42 +228,42 @@ namespace PUBG_Mouse_Helper
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 6, 4, 8);
+            this.CurrentPreset = new Preset(false, presetName, 0, 1, 2, 8);
             this.presetSwitchHotkeyIndex = 0;
         }
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
             string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 8, 2, 6);
+            this.CurrentPreset = new Preset(false, presetName, 0, 1, 2, 6);
             this.presetSwitchHotkeyIndex = 1;
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
             string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 6, 2, 6);
+            this.CurrentPreset = new Preset(false, presetName, 0, 1, 1, 6);
             this.presetSwitchHotkeyIndex = 2;
         }
 
         private void toolStripMenuItem5_Click(object sender, EventArgs e)
         {
             string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 1, 10, 2, 6);
+            this.CurrentPreset = new Preset(false, presetName, 0, 1, 1, 6);
             this.presetSwitchHotkeyIndex = 3;
         }
 
         private void toolStripMenuItem6_Click(object sender, EventArgs e)
         {
             string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 9, 2, 6);
+            this.CurrentPreset = new Preset(false, presetName, 0, 2, 2, 6);
             this.presetSwitchHotkeyIndex = 4;
         }
 
         private void toolStripMenuItem7_Click(object sender, EventArgs e)
         {
             string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 1, 8, 2, 6);
+            this.CurrentPreset = new Preset(false, presetName, 0, 2, 3, 6);
             this.presetSwitchHotkeyIndex = 5;
         }
 
