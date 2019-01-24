@@ -29,4 +29,20 @@ My <a href="http://c0dew0rth.blogspot.com/2018/05/pubg-mobile-mouse-helper.html"
 Download the program <a href="https://github.com/globalpolicy/pubgmobilemousehelper/raw/master/PUBG%20Mouse%20Helper/PUBG%20Mouse%20Helper/bin/Release/PUBG%20Mouse%20Helper.exe">here</a>
   <br/><br/>
   Quick Note : .Net Framework 4.6.1
+  <hr/>
   
+<h2>Version 2.3</h2>
+  <ul>
+  <li>
+    Separate presets for separate weapon slots (1, 2 and 3)
+  </li>
+  <li>
+    Added presets for new weapons
+  </li>
+  <li>
+    Removed the third trackbar from previous versions - turns out, wasn't all that necessary
+  </li>
+  <li>
+    Fixed minor bugs
+  </li>
+  </ul>
