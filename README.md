@@ -30,7 +30,13 @@ Download the program <a href="https://github.com/globalpolicy/pubgmobilemousehel
   <br/><br/>
   Quick Note : .Net Framework 4.6.1
   <hr/>
-  
+  <h2>Version 2.2</h2>
+  <ul>
+  <li>
+    Choice between MMB, RMB, CTRL and SHIFT to fire
+  </li>
+  </ul>
+  <hr/>
 <h2>Version 2.3</h2>
   <ul>
   <li>
