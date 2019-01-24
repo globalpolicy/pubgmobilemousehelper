@@ -15,5 +15,6 @@ namespace PUBG_Mouse_Helper
         void OnDownArrowPressed();
         void OnToggleRecoilCompensationHotkeyPressed();
         void OnToggleActivateProgramHotkeyPressed();
+        void OnWeaponSlotChangeHotkeyPressed(int slotNumber);
     }
 }

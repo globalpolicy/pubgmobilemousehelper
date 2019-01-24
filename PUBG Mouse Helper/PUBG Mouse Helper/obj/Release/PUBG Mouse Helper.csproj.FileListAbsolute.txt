@@ -1,0 +1,12 @@
+C:\Users\s0ft\Desktop\PUBG Mouse Heper\PUBG Mouse Helper\bin\Release\PUBG Mouse Helper.exe.config
+C:\Users\s0ft\Desktop\PUBG Mouse Heper\PUBG Mouse Helper\bin\Release\PUBG Mouse Helper.exe
+C:\Users\s0ft\Desktop\PUBG Mouse Heper\PUBG Mouse Helper\bin\Release\PUBG Mouse Helper.pdb
+C:\Users\s0ft\Desktop\PUBG Mouse Heper\PUBG Mouse Helper\obj\Release\PUBG Mouse Helper.csprojAssemblyReference.cache
+C:\Users\s0ft\Desktop\PUBG Mouse Heper\PUBG Mouse Helper\obj\Release\PUBG_Mouse_Helper.Form1.resources
+C:\Users\s0ft\Desktop\PUBG Mouse Heper\PUBG Mouse Helper\obj\Release\PUBG_Mouse_Helper.MessageToast.resources
+C:\Users\s0ft\Desktop\PUBG Mouse Heper\PUBG Mouse Helper\obj\Release\PUBG_Mouse_Helper.Properties.Resources.resources
+C:\Users\s0ft\Desktop\PUBG Mouse Heper\PUBG Mouse Helper\obj\Release\PUBG_Mouse_Helper.SavePresetAsDialog.resources
+C:\Users\s0ft\Desktop\PUBG Mouse Heper\PUBG Mouse Helper\obj\Release\PUBG Mouse Helper.csproj.GenerateResource.cache
+C:\Users\s0ft\Desktop\PUBG Mouse Heper\PUBG Mouse Helper\obj\Release\PUBG Mouse Helper.csproj.CoreCompileInputs.cache
+C:\Users\s0ft\Desktop\PUBG Mouse Heper\PUBG Mouse Helper\obj\Release\PUBG Mouse Helper.exe
+C:\Users\s0ft\Desktop\PUBG Mouse Heper\PUBG Mouse Helper\obj\Release\PUBG Mouse Helper.pdb

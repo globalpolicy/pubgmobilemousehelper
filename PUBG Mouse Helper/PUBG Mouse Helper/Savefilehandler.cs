@@ -65,12 +65,12 @@ namespace PUBG_Mouse_Helper
                         if (foundPreset)
                         {
                             string[] tokens = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                            if (tokens.Length == 4)
+                            if (tokens.Length == 3)
                             {
                                 retval.Add(Int32.Parse(tokens[0]));
                                 retval.Add(Int32.Parse(tokens[1]));
                                 retval.Add(Int32.Parse(tokens[2]));
-                                retval.Add(Int32.Parse(tokens[3]));
+
                             }
                             else
                             {
@@ -90,7 +90,7 @@ namespace PUBG_Mouse_Helper
             return retval;
         }
 
-        public static bool SavePresets(string presetName, int dx, int dy, int waitms, int delayms)
+        public static bool SavePresets(string presetName, int dx, int dy, int delayms)
         {
             bool retval = false;
 
@@ -100,7 +100,7 @@ namespace PUBG_Mouse_Helper
                 oldContent = File.ReadAllText(saveFileName);
                 File.Delete(saveFileName);
             }
-            string newContent = oldContent + presetName + "\r\n" + dx.ToString() + ";" + dy.ToString() + ";" + waitms.ToString() + ";" + delayms.ToString() + "\r\n";
+            string newContent = oldContent + presetName + "\r\n" + dx.ToString() + ";" + dy.ToString() + ";" +  delayms.ToString() + "\r\n";
             File.WriteAllText(saveFileName, newContent);
             retval = true;
 

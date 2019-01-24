@@ -32,23 +32,9 @@ namespace PUBG_Mouse_Helper
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
         }
 
-        public static void MouseMove(int dx, int dy, uint sleep = 10)
+        public static void MouseMove(int dx, int dy)
         {
-            int stepx, stepy;
-
-            stepx = (dx < 0) ?  -1 : 1;
-            for (int cnt = 1; cnt <= Math.Abs(dx); cnt++)
-            {
-                mouse_event(MOUSEEVENTF_MOVE, stepx, 0, 0, UIntPtr.Zero);
-                Thread.Sleep((int)sleep / 2);
-            }
-
-            stepy = (dy < 0) ?  -1 : 1;
-            for (int cnt = 1; cnt <= Math.Abs(dy); cnt++)
-            {
-                mouse_event(MOUSEEVENTF_MOVE, 0, stepy, 0, UIntPtr.Zero);
-                Thread.Sleep((int)sleep / 2);
-            }
+            mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, UIntPtr.Zero);
         }
     }
 }
