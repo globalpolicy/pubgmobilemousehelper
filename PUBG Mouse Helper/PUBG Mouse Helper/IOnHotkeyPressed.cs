@@ -9,10 +9,12 @@ namespace PUBG_Mouse_Helper
     public interface IOnHotkeyPressed
     {
         void OnPresetSwitchHotkeyPressed();
-        void OnRightArrowPressed();
-        void OnLeftArrowPressed();
         void OnUpArrowPressed();
         void OnDownArrowPressed();
+        void OnLeftSquareBracketKeyPressed();
+        void OnRightSquareBracketKeyPressed();
+        void OnSemicolonKeyPressed();
+        void OnSingleQuoteKeyPressed();
         void OnToggleRecoilCompensationHotkeyPressed();
         void OnToggleActivateProgramHotkeyPressed();
         void OnWeaponSlotChangeHotkeyPressed(int slotNumber);

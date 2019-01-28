@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Threading;
+using System.Timers;
 
 namespace PUBG_Mouse_Helper
 {
@@ -14,7 +16,17 @@ namespace PUBG_Mouse_Helper
         public bool PerformRecoilCompensation { get; set; } = true;
         public bool Activated { get; set; } = false;
 
+        private bool firingState = false;
+
+        private int _dy;
+        private int _shotInterval = 1;
+        private int _pullDelay;
+        private string _fireButton;
         private IOnHotkeyPressed onHotkeyPressed;
+
+        private System.Timers.Timer shootTimer;
+        private System.Timers.Timer pullDownMouseTimer;
+
 
         [DllImport("user32.dll")]
         static extern short GetAsyncKeyState(System.Windows.Forms.Keys vKey);
@@ -22,20 +34,39 @@ namespace PUBG_Mouse_Helper
         public Poller(IOnHotkeyPressed onHotkeyPressed)
         {
             this.onHotkeyPressed = onHotkeyPressed;
+
+            shootTimer = new System.Timers.Timer();
+            shootTimer.Elapsed += (s, e) => PollFireButton();
+            shootTimer.Interval = 1; //this will be updated later in realtime in the elapsed event itself
+
+            pullDownMouseTimer = new System.Timers.Timer();
+            pullDownMouseTimer.Elapsed += (s, e) => PullDownMouse();
+            pullDownMouseTimer.AutoReset = false; //will restart manually
+            pullDownMouseTimer.Interval = 1; //as realtime as possible to monitor and act on whether firebutton is being pressed
+            pullDownMouseTimer.Start();
         }
 
-        public void Poll(int dx, int dy, string fireButton)
+
+
+        public void Poll(int dy, int shotInterval, int pullDelay, string fireButton)
         {
+            this._dy = dy;
+            this._shotInterval = shotInterval;
+            this._pullDelay = pullDelay;
+            this._fireButton = fireButton;
+
             if (this.Activated)
             {
-                PollFireButton(dx, dy, fireButton);
-                if (this.PerformRecoilCompensation)
-                {
-                    PollPresetChangeHotkey();
-                    PollTrackbarValuesChangeHotkey();
-                }
+                if (this.firingState == false) this.shootTimer.Interval = 1;
+                this.shootTimer.Enabled = true;
+                PollPresetChangeHotkey();
+                PollTrackbarValuesChangeHotkey();
                 PollToggleRecoilCompensationHotkey();
                 PollWeaponSlotChangeHotkey();
+            }
+            else
+            {
+                this.shootTimer.Enabled = false;
             }
 
             PollToggleActivateProgramHotkey();
@@ -68,44 +99,6 @@ namespace PUBG_Mouse_Helper
                 this.onHotkeyPressed.OnWeaponSlotChangeHotkeyPressed(weaponSlotNumberPressed);
         }
 
-        private void PollFireButton(int dx, int dy, string fireKeyString)
-        {
-            Keys fireKey = Keys.MButton; //default is middle mouse button
-            switch (fireKeyString)
-            {
-                case "CTRL":
-                    fireKey = Keys.ControlKey;
-                    break;
-                case "SHIFT":
-                    fireKey = Keys.ShiftKey;
-                    break;
-                case "RMB":
-                    fireKey = Keys.RButton;
-                    break;
-                case "MMB":
-                    fireKey = Keys.MButton;
-                    break;
-            }
-            PollMouseButton(dx, dy, fireKey);
-        }
-
-        private void PollMouseButton(int dx, int dy, Keys key)
-        {
-            short gaks = GetAsyncKeyState(key);
-            if ((gaks & 0b10000000_00000000) > 0) //if the key is set (non-zero) i.e. the key is being held down
-            {
-                MouseHelperClass.LeftClickDown();
-                MouseHelperClass.LeftClickUp();
-
-                if (this.PerformRecoilCompensation)
-                {
-                    MouseHelperClass.MouseMove(dx, dy);
-                }
-
-            }
-
-        }
-
         private void PollPresetChangeHotkey()
         {
             short gaks = GetAsyncKeyState(Keys.Enter);
@@ -118,19 +111,7 @@ namespace PUBG_Mouse_Helper
 
         private void PollTrackbarValuesChangeHotkey()
         {
-            short gaks = GetAsyncKeyState(Keys.Right);
-            if ((gaks & 0b10000000_00000000) > 0)//if Right arrow key was pressed and held
-            {
-                HelperFunctions.WaitUntilTimeoutWhileTrue(() => (GetAsyncKeyState(Keys.Right) & 0b10000000_00000000) > 0, 100); //wait until Right arrow key is released with timeout of 100ms
-                this.onHotkeyPressed.OnRightArrowPressed();
-            }
-
-            gaks = GetAsyncKeyState(Keys.Left);
-            if ((gaks & 0b10000000_00000000) > 0)//if Left arrow key was pressed and held
-            {
-                HelperFunctions.WaitUntilTimeoutWhileTrue(() => (GetAsyncKeyState(Keys.Left) & 0b10000000_00000000) > 0, 100); //wait until Left arrow key is released with timeout of 100ms
-                this.onHotkeyPressed.OnLeftArrowPressed();
-            }
+            short gaks;
 
             gaks = GetAsyncKeyState(Keys.Up);
             if ((gaks & 0b10000000_00000000) > 0)//if Up arrow key was pressed and held
@@ -144,6 +125,34 @@ namespace PUBG_Mouse_Helper
             {
                 HelperFunctions.WaitUntilTimeoutWhileTrue(() => (GetAsyncKeyState(Keys.Down) & 0b10000000_00000000) > 0, 100); //wait until Down arrow key is released with timeout of 100ms
                 this.onHotkeyPressed.OnDownArrowPressed();
+            }
+
+            gaks = GetAsyncKeyState(Keys.OemOpenBrackets);
+            if ((gaks & 0b10000000_00000000) > 0)//if [ key was pressed and held
+            {
+                HelperFunctions.WaitUntilTimeoutWhileTrue(() => (GetAsyncKeyState(Keys.OemOpenBrackets) & 0b10000000_00000000) > 0, 10); //wait until [ key is released with timeout of 10ms
+                this.onHotkeyPressed.OnLeftSquareBracketKeyPressed();
+            }
+
+            gaks = GetAsyncKeyState(Keys.OemCloseBrackets);
+            if ((gaks & 0b10000000_00000000) > 0)//if ] key was pressed and held
+            {
+                HelperFunctions.WaitUntilTimeoutWhileTrue(() => (GetAsyncKeyState(Keys.OemCloseBrackets) & 0b10000000_00000000) > 0, 10); //wait until ] key is released with timeout of 10ms
+                this.onHotkeyPressed.OnRightSquareBracketKeyPressed();
+            }
+
+            gaks = GetAsyncKeyState(Keys.OemSemicolon);
+            if ((gaks & 0b10000000_00000000) > 0)//if ; key was pressed and held
+            {
+                HelperFunctions.WaitUntilTimeoutWhileTrue(() => (GetAsyncKeyState(Keys.OemSemicolon) & 0b10000000_00000000) > 0, 100); //wait until ; key is released with timeout of 100ms
+                this.onHotkeyPressed.OnSemicolonKeyPressed();
+            }
+
+            gaks = GetAsyncKeyState(Keys.OemQuotes);
+            if ((gaks & 0b10000000_00000000) > 0)//if ' key was pressed and held
+            {
+                HelperFunctions.WaitUntilTimeoutWhileTrue(() => (GetAsyncKeyState(Keys.OemQuotes) & 0b10000000_00000000) > 0, 100); //wait until ' key is released with timeout of 100ms
+                this.onHotkeyPressed.OnSingleQuoteKeyPressed();
             }
         }
 
@@ -167,5 +176,49 @@ namespace PUBG_Mouse_Helper
             }
         }
 
+
+        #region These methods run in their own individual timer threads
+
+        private void PollFireButton()
+        {
+            this.shootTimer.Interval = this._shotInterval;
+            Keys fireKey = Keys.MButton; //default is middle mouse button
+            fireKey = HelperFunctions.GetFireKeyFromString(this._fireButton);
+            short gaks = GetAsyncKeyState(fireKey);
+            if ((gaks & 0b10000000_00000000) > 0) //if the key is set (non-zero) i.e. the key is being held down
+            {
+                MouseHelperClass.LeftClickDown();
+                MouseHelperClass.LeftClickUp();
+
+                this.firingState = true;
+
+            }
+            else
+            {
+                this.firingState = false;
+            }
+        }
+
+        private void PullDownMouse()
+        {
+
+            Keys fireKey = HelperFunctions.GetFireKeyFromString(this._fireButton);
+            short gaks = GetAsyncKeyState(fireKey);
+            bool fireKeyPressed = (gaks & 0b10000000_00000000) > 0;
+
+            while (this.Activated && this.PerformRecoilCompensation && fireKeyPressed)
+            {
+                MouseHelperClass.MouseMove(this._dy, this._pullDelay);
+
+                fireKey = HelperFunctions.GetFireKeyFromString(this._fireButton);
+                gaks = GetAsyncKeyState(fireKey);
+                fireKeyPressed = (gaks & 0b10000000_00000000) > 0;
+            }
+
+            this.pullDownMouseTimer.Start(); //reset the timer
+
+        }
+
+        #endregion
     }
 }
