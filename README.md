@@ -1,7 +1,7 @@
 # PUBG Mobile PC version (Tencent emulation) mouse helper
 Auto fire single shot weapons in PUBG Mobile PC version with recoil compensation.
 <p>
-  Features :
+  <h3>Features :</h3>
 
 <ul>
   <li>Hold middle mouse button/shift/ctrl/right mouse button/'v' key to auto fire single shot weapons</li>
@@ -33,7 +33,7 @@ Download the program <a href="https://github.com/globalpolicy/pubgmobilemousehel
   <br/><br/>
   Quick Note : .Net Framework 4.6.1
   <hr/>
-  <h3>Changes in version 3:</h3>
+  <h3>Changes in version 3 :</h3>
   <ul>
   <li>Removed dx parameter entirely - no use</li>
   <li>Removed built-in hardcoded presets - less clutter</li>
