@@ -33,3 +33,11 @@ Download the program <a href="https://github.com/globalpolicy/pubgmobilemousehel
   <br/><br/>
   Quick Note : .Net Framework 4.6.1
   <hr/>
+  <h3>Changes in version 3:</h3>
+  <ul>
+  <li>Removed dx parameter entirely - no use</li>
+  <li>Removed built-in hardcoded presets - less clutter</li>
+  <li>Added the option of 'V' key for firing</li>
+  <li>Utilises multi-threading for generating clicks and moving mouse simultaneously - more efficient, robust and responsive</li>
+  <li>Overall greater degree of granularity for tweaking the parameters to match different recoil profiles</li>
+  </ul>
