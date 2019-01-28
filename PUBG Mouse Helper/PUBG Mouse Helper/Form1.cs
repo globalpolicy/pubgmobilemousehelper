@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.Remoting;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,20 +17,20 @@ namespace PUBG_Mouse_Helper
     {
         private class Preset
         {
-            public Preset(bool isUserDefined, string presetName, int dx, int dy, int timerDelay)
+            public Preset(bool isUserDefined, string presetName, int dy, int shotInterval, int pullDelay)
             {
                 UserDefined = isUserDefined;
                 PresetName = presetName;
-                Dx = dx;
                 Dy = dy;
-                TimerDelay = timerDelay;
+                ShotInterval = shotInterval;
+                PullDelay = pullDelay;
             }
             public Preset() { }
             public string PresetName { get; set; }
             public bool UserDefined { get; set; }
-            public int Dx { get; set; }
             public int Dy { get; set; }
-            public int TimerDelay { get; set; }
+            public int PullDelay { get; set; }
+            public int ShotInterval { get; set; }
             public bool IsEmpty() => PresetName == null;
         }
 
@@ -63,9 +64,9 @@ namespace PUBG_Mouse_Helper
         public Form1()
         {
             InitializeComponent();
-            trackBar1.Scroll += OnTrackBarScroll;
-            trackBar2.Scroll += OnTrackBarScroll;
-            trackBar4.Scroll += OnTrackBarScroll;
+            trackBarShotInterval.Scroll += OnTrackBarScroll;
+            trackBarDy.Scroll += OnTrackBarScroll;
+            trackBarPullDelay.Scroll += OnTrackBarScroll;
             poller = new Poller(this);
         }
 
@@ -75,7 +76,7 @@ namespace PUBG_Mouse_Helper
         {
             try
             {
-                if (Savefilehandler.SavePresets(presetName, trackBar1.Value, trackBar2.Value, trackBar4.Value))
+                if (Savefilehandler.SavePresets(presetName, trackBarDy.Value,trackBarShotInterval.Value , trackBarPullDelay.Value))
                 {
                     toolStripStatusLabel1.Text = $"Saved preset {presetName}";
                     toolStripMenuItemPresets.DropDownItems.Remove(userPresetsMenuItem);
@@ -107,40 +108,58 @@ namespace PUBG_Mouse_Helper
             new MessageToast($"Weapon slot #{activeWeaponSlot}\n{presetMenuItemsList[presetSwitchHotkeyIndex].Text}").Show();
         }
 
-        public void OnRightArrowPressed()
-        {
-            if (trackBar1.Value == trackBar1.Maximum)
-                return;
-            trackBar1.Value++;
-            this.CurrentPreset = new Preset();
-            new MessageToast($"dx = {trackBar1.Value}").Show(); //show a message to user regarding the new dx value
-        }
-
-        public void OnLeftArrowPressed()
-        {
-            if (trackBar1.Value == trackBar1.Minimum)
-                return;
-            trackBar1.Value--;
-            this.CurrentPreset = new Preset();
-            new MessageToast($"dx = {trackBar1.Value}").Show(); //show a message to user regarding the new dx value
-        }
-
         public void OnUpArrowPressed()
         {
-            if (trackBar2.Value == trackBar2.Minimum)
+            if (trackBarDy.Value == trackBarDy.Minimum)
                 return;
-            trackBar2.Value--;
+            trackBarDy.Value--;
             this.CurrentPreset = new Preset();
-            new MessageToast($"dy = {trackBar2.Value}").Show(); //show a message to user regarding the new dy value
+            new MessageToast($"dy = {trackBarDy.Value}").Show(); //show a message to user regarding the new dy value
         }
 
         public void OnDownArrowPressed()
         {
-            if (trackBar2.Value == trackBar2.Maximum)
+            if (trackBarDy.Value == trackBarDy.Maximum)
                 return;
-            trackBar2.Value++;
+            trackBarDy.Value++;
             this.CurrentPreset = new Preset();
-            new MessageToast($"dy = {trackBar2.Value}").Show(); //show a message to user regarding the new dy value
+            new MessageToast($"dy = {trackBarDy.Value}").Show(); //show a message to user regarding the new dy value
+        }
+
+        public void OnLeftSquareBracketKeyPressed()
+        {
+            if (trackBarShotInterval.Value - 10 < trackBarShotInterval.Minimum)
+                return;
+            trackBarShotInterval.Value -= 10;
+            this.CurrentPreset = new Preset();
+            new MessageToast($"Shot interval = {trackBarShotInterval.Value}").Show();
+        }
+
+        public void OnRightSquareBracketKeyPressed()
+        {
+            if (trackBarShotInterval.Value + 10 > trackBarShotInterval.Maximum)
+                return;
+            trackBarShotInterval.Value += 10;
+            this.CurrentPreset = new Preset();
+            new MessageToast($"Shot interval = {trackBarShotInterval.Value}").Show();
+        }
+
+        public void OnSemicolonKeyPressed()
+        {
+            if (trackBarPullDelay.Value == trackBarPullDelay.Minimum)
+                return;
+            trackBarPullDelay.Value--;
+            this.CurrentPreset = new Preset();
+            new MessageToast($"Pull delay = {trackBarPullDelay.Value}").Show();
+        }
+
+        public void OnSingleQuoteKeyPressed()
+        {
+            if (trackBarPullDelay.Value == trackBarPullDelay.Maximum)
+                return;
+            trackBarPullDelay.Value++;
+            this.CurrentPreset = new Preset();
+            new MessageToast($"Pull delay = {trackBarPullDelay.Value}").Show();
         }
 
         public void OnToggleRecoilCompensationHotkeyPressed()
@@ -192,9 +211,9 @@ namespace PUBG_Mouse_Helper
                     }
                 }
 
-                trackBar1.Value = this.CurrentPreset.Dx;
-                trackBar2.Value = this.CurrentPreset.Dy;
-                trackBar4.Value = this.CurrentPreset.TimerDelay;
+                trackBarShotInterval.Value = this.CurrentPreset.ShotInterval;
+                trackBarDy.Value = this.CurrentPreset.Dy;
+                trackBarPullDelay.Value = this.CurrentPreset.PullDelay;
             }
             else
             {
@@ -216,103 +235,18 @@ namespace PUBG_Mouse_Helper
         {
             if (toolStripMenuItemActivate.Checked)
             {
-                toolStripStatusLabel1.Text = $"Monitor active : (dx={trackBar1.Value}, dy={trackBar2.Value}, TimerDelay={trackBar4.Value})";
+                toolStripStatusLabel1.Text = $"Monitor active : (dy={trackBarDy.Value}, ShotInterval={trackBarShotInterval.Value}, PullDelay={trackBarPullDelay.Value})";
                 notifyIcon1.Text = toolStripStatusLabel1.Text;
             }
             else
             {
                 notifyIcon1.Text = HelperFunctions.GetApplicationName();
             }
-            timer1.Interval = trackBar4.Value;
-            poller.Poll(trackBar1.Value, trackBar2.Value, toolStripComboBoxFireButton.Text);
+
+            poller.Poll(trackBarDy.Value, trackBarShotInterval.Value, trackBarPullDelay.Value, toolStripComboBoxFireButton.Text);
 
         }
 
-
-
-        private void toolStripMenuItemM16A4_Click(object sender, EventArgs e)
-        {
-            string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 2, 1);
-            this.presetSwitchHotkeyIndex = 0;
-        }
-
-        private void toolStripMenuItemMini14_Click(object sender, EventArgs e)
-        {
-            string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 3, 52);
-            this.presetSwitchHotkeyIndex = 1;
-        }
-
-        private void toolStripMenuItemScarL_Click(object sender, EventArgs e)
-        {
-            string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 3, 1);
-            this.presetSwitchHotkeyIndex = 2;
-        }
-
-        private void toolStripMenuItemM416_Click(object sender, EventArgs e)
-        {
-            string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 2, 21);
-            this.presetSwitchHotkeyIndex = 3;
-        }
-
-        private void toolStripMenuItemQBU_Click(object sender, EventArgs e)
-        {
-            string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 2, 24);
-            this.presetSwitchHotkeyIndex = 4;
-        }
-
-        private void toolStripMenuItemAKM_Click(object sender, EventArgs e)
-        {
-            string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 3, 24);
-            this.presetSwitchHotkeyIndex = 5;
-        }
-
-        private void toolStripMenuItemSLR_Click(object sender, EventArgs e)
-        {
-            string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 6, 60);
-            this.presetSwitchHotkeyIndex = 6;
-        }
-
-        private void toolStripMenuItemSKS_Click(object sender, EventArgs e)
-        {
-            string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 3, 44);
-            this.presetSwitchHotkeyIndex = 7;
-        }
-
-        private void toolStripMenuItemGroza_Click(object sender, EventArgs e)
-        {
-            string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 2, 24);
-            this.presetSwitchHotkeyIndex = 8;
-        }
-
-        private void toolStripMenuItemM762_Click(object sender, EventArgs e)
-        {
-            string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 4, 13);
-            this.presetSwitchHotkeyIndex = 9;
-        }
-
-        private void toolStripMenuItemMk14_Click(object sender, EventArgs e)
-        {
-            string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 3, 32);
-            this.presetSwitchHotkeyIndex = 10;
-        }
-
-        private void toolStripMenuItemUMP9_Click(object sender, EventArgs e)
-        {
-            string presetName = ((ToolStripItem)sender).Text;
-            this.CurrentPreset = new Preset(false, presetName, 0, 2, 9);
-            this.presetSwitchHotkeyIndex = 11;
-        }
 
         private void trayToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -344,7 +278,6 @@ namespace PUBG_Mouse_Helper
         {
             this.Text = HelperFunctions.GetApplicationName();
             LoadUserPresetsNames();
-            toolStripMenuItemPresets.DropDownItems[0].PerformClick(); //load the first preset by default
         }
 
         private void OnUserPresetClicked(object sender, EventArgs eventArgs)
@@ -358,7 +291,7 @@ namespace PUBG_Mouse_Helper
                     if (presetValues.Count == 3)
                     {
                         this.CurrentPreset = new Preset(true, presetName, presetValues[0], presetValues[1], presetValues[2]);
-                        this.presetSwitchHotkeyIndex = 12 + Savefilehandler.GetSavedPresetNamesList().IndexOf(presetName); //12=number of default presets+1
+                        this.presetSwitchHotkeyIndex = Savefilehandler.GetSavedPresetNamesList().IndexOf(presetName);
 
 
                     }
@@ -446,12 +379,13 @@ namespace PUBG_Mouse_Helper
 Here are a couple pro-tips anyway :
 
 1. Try running as administrator if the program doesn't seem to work.
-2. You can change the active preset while monitoring is on by pressing Enter key.
-3. You can use the arrow keys to change the recoil correction parameters.
-4. Use F7 key to toggle recoil compensation on and off.
-5. Use F6 key to enable/disable the program.
-6. Use weapon slot keys 1, 2 and 3 for different weapon presets.
-7. The inbuilt presets are for iron-sight configs.
+2. Use F6 key to enable/disable the program.
+3. Use F7 key to toggle recoil compensation on and off.
+4. You can change the active preset while monitoring is on by pressing Enter key.
+5. You can use the up and down arrow keys to change the vertical recoil correction.
+6. You can use the [ and ] keys to change the shot interval value.
+7. You can use the ; and ' keys to change the pull delay value.
+8. Use weapon slot keys 1, 2 and 3 for different weapon presets.
 ";
 
             MessageBox.Show(instructionMsg, "Instructions", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -493,14 +427,14 @@ Here are a couple pro-tips anyway :
                 toolStripStatusLabel1.Text = "Ready";
                 notifyIcon1.Text = HelperFunctions.GetApplicationName();
                 toolStripMenuItemSaveAsPreset.Enabled = true;
-                if (!CurrentPreset.IsEmpty() && CurrentPreset.UserDefined)
+                if (CurrentPreset!=null && CurrentPreset.UserDefined)
                 {
                     toolStripMenuItemDeletePreset.Enabled = true;
                 }
             }
         }
 
-        
+
     }
 
 

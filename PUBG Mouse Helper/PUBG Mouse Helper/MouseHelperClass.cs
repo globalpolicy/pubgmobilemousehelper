@@ -20,7 +20,7 @@ namespace PUBG_Mouse_Helper
         const uint MOUSEEVENTF_MIDDLEDOWN = 0x20;
         const uint MOUSEEVENTF_MIDDLEUP = 0x40;
         const uint MOUSEEVENTF_MOVE = 0x01;
-        
+
 
         public static void LeftClickDown()
         {
@@ -32,9 +32,11 @@ namespace PUBG_Mouse_Helper
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
         }
 
-        public static void MouseMove(int dx, int dy)
+
+        public static void MouseMove(int dy, int delay)
         {
-            mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, UIntPtr.Zero);
+            mouse_event(MOUSEEVENTF_MOVE, 0, dy, 0, UIntPtr.Zero);
+            Thread.Sleep(delay);
         }
     }
 }

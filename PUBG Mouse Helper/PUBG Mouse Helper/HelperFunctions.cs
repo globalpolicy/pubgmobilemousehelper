@@ -19,7 +19,7 @@ namespace PUBG_Mouse_Helper
 
         public static string GetApplicationName()
         {
-            return "PUBG Mouse Helper 2.3";
+            return "PUBG Mouse Helper 3";
         }
 
         public static List<ToolStripMenuItem> GetListOfAllPresetMenuItems(ToolStripMenuItem toolStripMenuItemPresets)
@@ -42,6 +42,30 @@ namespace PUBG_Mouse_Helper
             }
 
             return presetMenuItemsList;
+        }
+
+        public static Keys GetFireKeyFromString(string fireKeyString)
+        {
+            Keys fireKey = Keys.MButton;
+            switch (fireKeyString)
+            {
+                case "CTRL":
+                    fireKey = Keys.ControlKey;
+                    break;
+                case "SHIFT":
+                    fireKey = Keys.ShiftKey;
+                    break;
+                case "RMB":
+                    fireKey = Keys.RButton;
+                    break;
+                case "MMB":
+                    fireKey = Keys.MButton;
+                    break;
+                case "V":
+                    fireKey = Keys.V;
+                    break;
+            }
+            return fireKey;
         }
     }
 }
