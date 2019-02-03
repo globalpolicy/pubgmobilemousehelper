@@ -97,15 +97,19 @@ namespace PUBG_Mouse_Helper
         {
             List<ToolStripMenuItem> presetMenuItemsList = HelperFunctions.GetListOfAllPresetMenuItems(toolStripMenuItemPresets);
 
-            presetSwitchHotkeyIndex++;
-            presetSwitchHotkeyIndex = presetSwitchHotkeyIndex % presetMenuItemsList.Count; //circle back to the range of available presets
+            if (presetMenuItemsList.Count > 0)
+            {
+                presetSwitchHotkeyIndex++;
+                presetSwitchHotkeyIndex = presetSwitchHotkeyIndex % presetMenuItemsList.Count; //circle back to the range of available presets
 
-            weaponSlotPresetNumberDict[activeWeaponSlot] = presetSwitchHotkeyIndex;
+                weaponSlotPresetNumberDict[activeWeaponSlot] = presetSwitchHotkeyIndex;
 
-            presetMenuItemsList[presetSwitchHotkeyIndex].PerformClick(); //call the corresponding method
+                presetMenuItemsList[presetSwitchHotkeyIndex].PerformClick(); //call the corresponding method
 
-            //show a message to user regarding the preset selected
-            new MessageToast($"Weapon slot #{activeWeaponSlot}\n{presetMenuItemsList[presetSwitchHotkeyIndex].Text}").Show();
+                //show a message to user regarding the preset selected
+                new MessageToast($"Weapon slot #{activeWeaponSlot}\n{presetMenuItemsList[presetSwitchHotkeyIndex].Text}").Show();
+            }
+
         }
 
         public void OnUpArrowPressed()
@@ -184,9 +188,13 @@ namespace PUBG_Mouse_Helper
             presetSwitchHotkeyIndex = weaponSlotPresetNumberDict[slotNumber];
 
             List<ToolStripMenuItem> presetMenuItemsList = HelperFunctions.GetListOfAllPresetMenuItems(toolStripMenuItemPresets);
-            presetMenuItemsList[presetSwitchHotkeyIndex].PerformClick();
 
-            new MessageToast($"Weapon slot #{activeWeaponSlot}\n{presetMenuItemsList[presetSwitchHotkeyIndex].Text}").Show();
+            if (presetMenuItemsList.Count > 0)
+            {
+                presetMenuItemsList[presetSwitchHotkeyIndex].PerformClick();
+                new MessageToast($"Weapon slot #{activeWeaponSlot}\n{presetMenuItemsList[presetSwitchHotkeyIndex].Text}").Show();
+            }
+            
         }
 
         #endregion
