@@ -42,7 +42,7 @@
             this.labelMessage.Location = new System.Drawing.Point(0, 0);
             this.labelMessage.Name = "labelMessage";
             this.labelMessage.Padding = new System.Windows.Forms.Padding(10);
-            this.labelMessage.Size = new System.Drawing.Size(235, 46);
+            this.labelMessage.Size = new System.Drawing.Size(235, 48);
             this.labelMessage.TabIndex = 0;
             this.labelMessage.Text = "Some message here";
             this.labelMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

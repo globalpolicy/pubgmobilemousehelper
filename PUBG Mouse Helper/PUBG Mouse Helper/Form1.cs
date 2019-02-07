@@ -47,18 +47,18 @@ namespace PUBG_Mouse_Helper
         }
 
         private Poller poller;
+        private WeaponSelectorForm weaponSelectorForm;
 
         ToolStripMenuItem userPresetsMenuItem;
 
-        private int presetSwitchHotkeyIndex = 0;
 
         private int activeWeaponSlot = 1;
 
-        private Dictionary<int, int> weaponSlotPresetNumberDict = new Dictionary<int, int>()
+        private Dictionary<int, string> weaponSlotPresetNameDict = new Dictionary<int, string>()
         {
-            { 1,0 },
-            { 2,0 },
-            { 3,0 }
+            { 1,"" },
+            { 2,"" },
+            { 3,"" }
         };
 
         public Form1()
@@ -76,7 +76,7 @@ namespace PUBG_Mouse_Helper
         {
             try
             {
-                if (Savefilehandler.SavePresets(presetName, trackBarDy.Value,trackBarShotInterval.Value , trackBarPullDelay.Value))
+                if (Savefilehandler.SavePresets(presetName, trackBarDy.Value, trackBarShotInterval.Value, trackBarPullDelay.Value))
                 {
                     toolStripStatusLabel1.Text = $"Saved preset {presetName}";
                     toolStripMenuItemPresets.DropDownItems.Remove(userPresetsMenuItem);
@@ -93,21 +93,31 @@ namespace PUBG_Mouse_Helper
 
         }
 
-        public void OnPresetSwitchHotkeyPressed()
+        public void OnEnterPressed()
         {
-            List<ToolStripMenuItem> presetMenuItemsList = HelperFunctions.GetListOfAllPresetMenuItems(toolStripMenuItemPresets);
-
-            if (presetMenuItemsList.Count > 0)
+            if (weaponSelectorForm != null)
             {
-                presetSwitchHotkeyIndex++;
-                presetSwitchHotkeyIndex = presetSwitchHotkeyIndex % presetMenuItemsList.Count; //circle back to the range of available presets
+                this.poller.PollKeyboardKeysForConfigChange = true;
+                if (weaponSelectorForm.GetSelectedPresetName() != "")
+                {
+                    weaponSlotPresetNameDict[activeWeaponSlot] = weaponSelectorForm.GetSelectedPresetName();
+                    HelperFunctions.GetToolStripMenuItemFromText(toolStripMenuItemPresets, weaponSlotPresetNameDict[activeWeaponSlot]).PerformClick();
+                    new MessageToast($"Weapon slot #{activeWeaponSlot}\n{weaponSlotPresetNameDict[activeWeaponSlot]}", 50).Show();
+                }
+                weaponSelectorForm.Close();
+                weaponSelectorForm = null;
 
-                weaponSlotPresetNumberDict[activeWeaponSlot] = presetSwitchHotkeyIndex;
+            }
+            else
+            {
+                List<ToolStripMenuItem> presetMenuItemsList = HelperFunctions.GetListOfAllPresetMenuItems(toolStripMenuItemPresets);
 
-                presetMenuItemsList[presetSwitchHotkeyIndex].PerformClick(); //call the corresponding method
-
-                //show a message to user regarding the preset selected
-                new MessageToast($"Weapon slot #{activeWeaponSlot}\n{presetMenuItemsList[presetSwitchHotkeyIndex].Text}").Show();
+                if (presetMenuItemsList.Count > 0)
+                {
+                    this.poller.PollKeyboardKeysForConfigChange = false;
+                    weaponSelectorForm = new WeaponSelectorForm(presetMenuItemsList);
+                    weaponSelectorForm.Show();
+                }
             }
 
         }
@@ -185,16 +195,23 @@ namespace PUBG_Mouse_Helper
         public void OnWeaponSlotChangeHotkeyPressed(int slotNumber)
         {
             activeWeaponSlot = slotNumber;
-            presetSwitchHotkeyIndex = weaponSlotPresetNumberDict[slotNumber];
-
-            List<ToolStripMenuItem> presetMenuItemsList = HelperFunctions.GetListOfAllPresetMenuItems(toolStripMenuItemPresets);
-
-            if (presetMenuItemsList.Count > 0)
+            try
             {
-                presetMenuItemsList[presetSwitchHotkeyIndex].PerformClick();
-                new MessageToast($"Weapon slot #{activeWeaponSlot}\n{presetMenuItemsList[presetSwitchHotkeyIndex].Text}").Show();
+                HelperFunctions.GetToolStripMenuItemFromText(toolStripMenuItemPresets, weaponSlotPresetNameDict[slotNumber]).PerformClick();
             }
-            
+            catch (PresetNotFoundException pnfex)
+            {
+                Logger.Log(pnfex.Message);
+            }
+            catch (PresetMenuNotPopulatedException pmnpex)
+            {
+                Logger.Log(pmnpex.Message);
+            }
+            finally
+            {
+                new MessageToast($"Weapon slot #{activeWeaponSlot}\n{weaponSlotPresetNameDict[slotNumber]}",50).Show();
+            }
+
         }
 
         #endregion
@@ -299,9 +316,6 @@ namespace PUBG_Mouse_Helper
                     if (presetValues.Count == 3)
                     {
                         this.CurrentPreset = new Preset(true, presetName, presetValues[0], presetValues[1], presetValues[2]);
-                        this.presetSwitchHotkeyIndex = Savefilehandler.GetSavedPresetNamesList().IndexOf(presetName);
-
-
                     }
                     else
                     {
@@ -389,7 +403,7 @@ Here are a couple pro-tips anyway :
 1. Try running as administrator if the program doesn't seem to work.
 2. Use F6 key to enable/disable the program.
 3. Use F7 key to toggle recoil compensation on and off.
-4. You can change the active preset while monitoring is on by pressing Enter key.
+4. You can change the active preset while monitoring is on by pressing Enter key and making a selection.
 5. You can use the up and down arrow keys to change the vertical recoil correction.
 6. You can use the [ and ] keys to change the shot interval value.
 7. You can use the ; and ' keys to change the pull delay value.
@@ -435,7 +449,7 @@ Here are a couple pro-tips anyway :
                 toolStripStatusLabel1.Text = "Ready";
                 notifyIcon1.Text = HelperFunctions.GetApplicationName();
                 toolStripMenuItemSaveAsPreset.Enabled = true;
-                if (CurrentPreset!=null && CurrentPreset.UserDefined)
+                if (CurrentPreset != null && CurrentPreset.UserDefined)
                 {
                     toolStripMenuItemDeletePreset.Enabled = true;
                 }
