@@ -19,7 +19,7 @@ namespace PUBG_Mouse_Helper
 
         public static string GetApplicationName()
         {
-            return "PUBG Mouse Helper 3";
+            return "PUBG Mouse Helper 3.1";
         }
 
         public static List<ToolStripMenuItem> GetListOfAllPresetMenuItems(ToolStripMenuItem toolStripMenuItemPresets)
@@ -66,6 +66,31 @@ namespace PUBG_Mouse_Helper
                     break;
             }
             return fireKey;
+        }
+
+        public static ToolStripMenuItem GetToolStripMenuItemFromText(ToolStripMenuItem toolStripMenuItemPresets, string menuItemText)
+        {
+            try
+            {
+                ToolStripMenuItem userPresetsMenu = (ToolStripMenuItem)toolStripMenuItemPresets.DropDownItems[0];
+                foreach (ToolStripMenuItem toolStripMenuItem in userPresetsMenu.DropDownItems)
+                {
+                    if (toolStripMenuItem.Text == menuItemText)
+                    {
+                        return toolStripMenuItem;
+                    }
+                }
+            }
+            catch (ArgumentOutOfRangeException aoorex)
+            {
+
+                throw new PresetMenuNotPopulatedException("Preset menu not populated!");
+            }
+
+
+
+
+            throw new PresetNotFoundException($"Preset {menuItemText} not present in Presets menu!");
         }
     }
 }

@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -72,6 +73,7 @@
     <Compile Include="HelperFunctions.cs" />
     <Compile Include="IOkButtonPressedPresetDialog.cs" />
     <Compile Include="IOnHotkeyPressed.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="MessageToast.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,6 +90,12 @@
     </Compile>
     <Compile Include="SavePresetAsDialog.Designer.cs">
       <DependentUpon>SavePresetAsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WeaponSelectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WeaponSelectorForm.Designer.cs">
+      <DependentUpon>WeaponSelectorForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -106,6 +114,9 @@
     </Compile>
     <EmbeddedResource Include="SavePresetAsDialog.resx">
       <DependentUpon>SavePresetAsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WeaponSelectorForm.resx">
+      <DependentUpon>WeaponSelectorForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

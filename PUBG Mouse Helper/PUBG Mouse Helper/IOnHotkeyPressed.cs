@@ -8,7 +8,7 @@ namespace PUBG_Mouse_Helper
 {
     public interface IOnHotkeyPressed
     {
-        void OnPresetSwitchHotkeyPressed();
+        void OnEnterPressed();
         void OnUpArrowPressed();
         void OnDownArrowPressed();
         void OnLeftSquareBracketKeyPressed();

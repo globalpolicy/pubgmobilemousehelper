@@ -15,6 +15,7 @@ namespace PUBG_Mouse_Helper
     {
         public bool PerformRecoilCompensation { get; set; } = true;
         public bool Activated { get; set; } = false;
+        public bool PollKeyboardKeysForConfigChange { get; set; } = true;
 
         private bool firingState = false;
 
@@ -59,10 +60,13 @@ namespace PUBG_Mouse_Helper
             {
                 if (this.firingState == false) this.shootTimer.Interval = 1;
                 this.shootTimer.Enabled = true;
-                PollPresetChangeHotkey();
-                PollTrackbarValuesChangeHotkey();
+                PollEnterKey();
                 PollToggleRecoilCompensationHotkey();
-                PollWeaponSlotChangeHotkey();
+                if (this.PollKeyboardKeysForConfigChange)
+                {
+                    PollTrackbarValuesChangeHotkey();
+                    PollWeaponSlotChangeHotkey();
+                }
             }
             else
             {
@@ -99,13 +103,13 @@ namespace PUBG_Mouse_Helper
                 this.onHotkeyPressed.OnWeaponSlotChangeHotkeyPressed(weaponSlotNumberPressed);
         }
 
-        private void PollPresetChangeHotkey()
+        private void PollEnterKey()
         {
             short gaks = GetAsyncKeyState(Keys.Enter);
             if ((gaks & 0b10000000_00000000) > 0) //if Enter was pressed and held
             {
                 HelperFunctions.WaitUntilTimeoutWhileTrue(() => (GetAsyncKeyState(Keys.Enter) & 0b10000000_00000000) > 0, 100); //wait until Enter is released with timeout of 100ms
-                this.onHotkeyPressed.OnPresetSwitchHotkeyPressed();
+                this.onHotkeyPressed.OnEnterPressed();
             }
         }
 
