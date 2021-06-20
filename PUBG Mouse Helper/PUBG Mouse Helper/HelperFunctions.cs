@@ -58,6 +58,9 @@ namespace PUBG_Mouse_Helper
                 case "RMB":
                     fireKey = Keys.RButton;
                     break;
+                case "LMB":
+                    fireKey = Keys.LButton;
+                    break;
                 case "MMB":
                     fireKey = Keys.MButton;
                     break;
